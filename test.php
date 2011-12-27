@@ -4,8 +4,15 @@
 
 	$d = new DocBlockParser();
 	$d->analyze("TestClass");
-	print_r($d->getAnnotations());
 
+	$annotations = $d->getAnnotations();
+
+	foreach($annotations as $annotation)
+	{
+		echo $annotation->getMethod()->name."\n";
+		echo $annotation->name."\n";
+		echo print_r($annotation->values, true)."\n";
+	}
 
 	class TestClass
 	{

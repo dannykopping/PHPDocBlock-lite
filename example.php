@@ -3,27 +3,33 @@
 	require_once "lib/DocBlockParser.php";
 
 	$d = new DocBlockParser();
-	$d->setMethodFilter(ReflectionMethod::IS_PUBLIC|ReflectionMethod::IS_PROTECTED);
-	$d->analyze("TestClass");
+	$d->setMethodFilter(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED);
+	$d->analyze(array("TestClass", "DocBlockParser"));
 
-	$methods = $d->getMethods();
+	$classes = $d->getClasses();
 
-	foreach ($methods as $method)
+	foreach ($classes as $class)
 	{
-		$annotations = $method->getAnnotations(array("param", "author"));
-		if(empty($annotations))
-			continue;
+		echo "Class: " . $class->name . "\n";
 
-		echo "Method: ".$method->name . "\n";
-		echo "Description: ".$method->description . "\n";
-
-		foreach ($annotations as $annotation)
+		$methods = $class->getMethods();
+		foreach ($methods as $method)
 		{
-			echo "\tAnnotation: ".$annotation->name . "\n";
-			echo "\tValues: ".print_r($annotation->values, true) . "\n";
-		}
+			$annotations = $method->getAnnotations(array("param", "author"));
+			if (empty($annotations))
+				continue;
 
-		echo str_repeat("-", 50)."\n";
+			echo "Method: " . $method->getClass()->name . "::" . $method->name . "\n";
+			echo "Description: " . $method->description . "\n";
+
+			foreach ($annotations as $annotation)
+			{
+				echo "\tAnnotation: " . $annotation->name . "\n";
+				echo "\tValues: " . print_r($annotation->values, true) . "\n";
+			}
+
+			echo str_repeat("-", 50) . "\n";
+		}
 	}
 
 	class TestClass

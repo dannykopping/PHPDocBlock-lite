@@ -6,9 +6,29 @@
 	{
 		public $name;
 
-		public $annotations = array();
+		private $annotations = array();
 
 		public $description;
+
+		private $class;
+
+		public function __construct(ClassElement $class)
+		{
+			$this->class = $class;
+		}
+
+		/**
+		 * Add an annotation
+		 *
+		 * @param AnnotationElement $annotation
+		 */
+		public function addAnnotation(AnnotationElement $annotation)
+		{
+			if(empty($this->annotations))
+				$this->annotations = array();
+
+			$this->annotations[] = $annotation;
+		}
 
 		/**
 		 * Get an array of all the parsed annotations
@@ -41,6 +61,16 @@
 			}
 
 			return $annotations;
+		}
+
+		/**
+		 * Get the related ClassElement instance
+		 *
+		 * @return ClassElement
+		 */
+		public function getClass()
+		{
+			return $this->class;
 		}
 	}
 ?>

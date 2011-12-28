@@ -47,6 +47,11 @@
 		private $currentAnnotation;
 
 		/**
+		 * @var	array	An array of parsed ClassElement instances
+		 */
+		private $classes;
+
+		/**
 		 * @var	array	An array of parsed MethodElement instances
 		 */
 		private $methods;
@@ -115,36 +120,52 @@
 		/**
 		 * Analyzes a class or instance for PHP DocBlock comments
 		 *
-		 * @param mixed	$className	Either a string containing the name of the class to reflect, or an object
+		 * @param array|string|object	$classes	A single string containing the name of the class to reflect, or an object
+		 *											 or an array of these
 		 */
-		public function analyze($className)
+		public function analyze($classes)
 		{
-			if (!is_string($className) && !is_object($className))
-				throw new Exception("Please pass a valid classname or instance to the DocBlockParser::analyze function");
+			if (empty($classes))
+				return;
 
-			$reflector = new ReflectionClass($className);
+			if (!is_array($classes))
+				$classes = array($classes);
 
-			$this->methods = array();
-			$this->annotations = array();
-
-			$methods = $reflector->getMethods($this->methodFilter);
-
-			foreach ($methods as $method)
+			foreach ($classes as $classItem)
 			{
-				$m = new MethodElement();
-				$m->name = $method->getName();
+				if (!is_string($classItem) && !is_object($classItem))
+					throw new Exception("Please pass a valid classname or instance to the DocBlockParser::analyze function");
 
-				preg_match_all($this->validBlockRegex, $method->getDocComment(), $matches, PREG_PATTERN_ORDER);
-				array_shift($matches);
+				$reflector = new ReflectionClass($classItem);
 
-				preg_match_all($this->allDocBlockLinesRegex, $method->getDocComment(), $result, PREG_PATTERN_ORDER);
-				for ($i = 0; $i < count($result[0]); $i++)
+				$class = new ClassElement();
+				$class->name = $reflector->getName();
+
+				$this->methods = array();
+				$this->annotations = array();
+
+				$methods = $reflector->getMethods($this->methodFilter);
+
+				foreach ($methods as $method)
 				{
-					$this->currentMethod =& $m;
-					$this->parse($result[0][$i]);
+					$m = new MethodElement($class);
+					$m->name = $method->getName();
+
+					preg_match_all($this->validBlockRegex, $method->getDocComment(), $matches, PREG_PATTERN_ORDER);
+					array_shift($matches);
+
+					preg_match_all($this->allDocBlockLinesRegex, $method->getDocComment(), $result, PREG_PATTERN_ORDER);
+					for ($i = 0; $i < count($result[0]); $i++)
+					{
+						$this->currentMethod =& $m;
+						$this->parse($result[0][$i]);
+					}
+
+					$this->methods[] = $m;
+					$class->addMethod($m);
 				}
 
-				$this->methods[] = $m;
+				$this->classes[] = $class;
 			}
 		}
 
@@ -176,7 +197,7 @@
 					}
 				}
 
-				$this->currentMethod->annotations[] = $an;
+				$this->currentMethod->addAnnotation($an);
 				$this->annotations[] = $this->currentAnnotation = $an;
 			}
 			else
@@ -194,6 +215,19 @@
 						$this->currentAnnotation->values[count($this->currentAnnotation->values) - 1] .= "\n" . $string;
 				}
 			}
+		}
+
+		/**
+		 * Get an array of parsed ClassElement instances
+		 *
+		 * @return array[ClassElement]|null
+		 */
+		public function getClasses()
+		{
+			if (!$this->classes || empty($this->classes))
+				return null;
+
+			return $this->classes;
 		}
 
 		/**

@@ -140,7 +140,10 @@
 				$this->methods = array();
 				$this->annotations = array();
 
-				$methods = $reflector->getMethods($this->methodFilter);
+				// a bug in the ReflectionClass makes getMethods behave unexpectedly when passed a NULL
+				$methods = (!$this->methodFilter)
+							?	$reflector->getMethods()
+							:	$reflector->getMethods($this->methodFilter);
 
 				foreach ($methods as $method)
 				{

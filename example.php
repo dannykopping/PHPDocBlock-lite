@@ -3,19 +3,27 @@
 	require_once "lib/DocBlockParser.php";
 
 	$d = new DocBlockParser();
+	$d->setMethodFilter(ReflectionMethod::IS_PUBLIC|ReflectionMethod::IS_PROTECTED);
 	$d->analyze("TestClass");
 
 	$methods = $d->getMethods();
 
-	foreach($methods as $method)
+	foreach ($methods as $method)
 	{
-		$annotations = $method->getAnnotations(array("param"));
+		$annotations = $method->getAnnotations(array("param", "author"));
+		if(empty($annotations))
+			continue;
+
+		echo "Method: ".$method->name . "\n";
+		echo "Description: ".$method->description . "\n";
+
 		foreach ($annotations as $annotation)
 		{
-			echo $annotation->getMethod()->name . "\n";
-			echo $annotation->name . "\n";
-			echo print_r($annotation->values, true) . "\n";
+			echo "\tAnnotation: ".$annotation->name . "\n";
+			echo "\tValues: ".print_r($annotation->values, true) . "\n";
 		}
+
+		echo str_repeat("-", 50)."\n";
 	}
 
 	class TestClass
@@ -25,6 +33,15 @@
 		 * @param $data  The data to be passed in
 		 */
 		public function test($data)
+		{
+		}
+
+		/**
+		 * This is another DocBlock description
+		 * @param $data  The data to be passed in
+		 * @author	Danny Kopping
+		 */
+		protected function test2($data)
 		{
 		}
 	}

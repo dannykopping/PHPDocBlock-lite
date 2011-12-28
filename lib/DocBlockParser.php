@@ -56,6 +56,11 @@
 		private $annotations;
 
 		/**
+		 * @var null|string	The method filter type(s)
+		 */
+		private $methodFilter;
+
+		/**
 		 *	Create a new DocBlockParser instance
 		 */
 		public function __construct()
@@ -87,13 +92,34 @@
 		}
 
 		/**
+		 * Set the ReflectionClass' method filter
+		 *
+		 * Any combination of ReflectionMethod::IS_STATIC,
+		 * ReflectionMethod::IS_PUBLIC,
+		 * ReflectionMethod::IS_PROTECTED,
+		 * ReflectionMethod::IS_PRIVATE,
+		 * ReflectionMethod::IS_ABSTRACT,
+		 * ReflectionMethod::IS_FINAL
+		 *
+		 * Example - to parse both protected and public methods:
+		 * $docParser->setMethodFilter(ReflectionMethod::IS_PROTECTED|ReflectionMethod::IS_PUBLIC);
+		 *
+		 * @param $filter null|string	The method filter type(s)
+		 *
+		 */
+		public function setMethodFilter($filter)
+		{
+			$this->methodFilter = $filter;
+		}
+
+		/**
 		 * Analyzes a class or instance for PHP DocBlock comments
 		 *
 		 * @param mixed	$className	Either a string containing the name of the class to reflect, or an object
 		 */
 		public function analyze($className)
 		{
-			if(!is_string($className) && !is_object($className))
+			if (!is_string($className) && !is_object($className))
 				throw new Exception("Please pass a valid classname or instance to the DocBlockParser::analyze function");
 
 			$reflector = new ReflectionClass($className);
@@ -101,7 +127,9 @@
 			$this->methods = array();
 			$this->annotations = array();
 
-			foreach ($reflector->getMethods() as $method)
+			$methods = $reflector->getMethods($this->methodFilter);
+
+			foreach ($methods as $method)
 			{
 				$m = new MethodElement();
 				$m->name = $method->getName();
@@ -175,7 +203,7 @@
 		 */
 		public function getMethods()
 		{
-			if(!$this->methods || empty($this->methods))
+			if (!$this->methods || empty($this->methods))
 				return null;
 
 			return $this->methods;
@@ -187,16 +215,16 @@
 		 * @param array	$filter	(optional) Filter by annotation name
 		 * @return array[AnnotationElement]
 		 */
-		public function getAnnotations($filter=null)
+		public function getAnnotations($filter = null)
 		{
-			if(!$this->annotations || empty($this->annotations))
+			if (!$this->annotations || empty($this->annotations))
 				return null;
 
-			if(!$this->methods || empty($this->methods))
+			if (!$this->methods || empty($this->methods))
 				return null;
 
 			$annotations = array();
-			foreach($this->methods as $method)
+			foreach ($this->methods as $method)
 			{
 				$methodAnnotations = $method->getAnnotations($filter);
 				array_merge($annotations, $methodAnnotations);

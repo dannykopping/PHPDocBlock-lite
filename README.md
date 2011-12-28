@@ -2,12 +2,14 @@
 
 ### WTF is a DocBlock?
 
-A DocBlock is a block comment in PHP:
+A DocBlock is a block comment in PHP (with optional annotations):
 
 ```php
 
 /**
-*	This is what it is!
+* Optional DocBlock comment
+*
+* @annotation	I'm an annotation!
 */
 ```
 

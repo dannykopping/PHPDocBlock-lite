@@ -64,6 +64,18 @@
 		}
 
 		/**
+		 * Determines whether this MethodElement instance contains an annotation of a certain type
+		 *
+		 * @param array $filter	An annotation name
+		 * @return bool
+		 */
+		public function hasAnnotation($filter)
+		{
+			$annotations = $this->getAnnotations($filter);
+			return !empty($annotations);
+		}
+
+		/**
 		 * Get the related ClassElement instance
 		 *
 		 * @return ClassElement

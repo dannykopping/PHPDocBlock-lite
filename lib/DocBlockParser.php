@@ -1,13 +1,6 @@
 <?php
 
-	//	require_once dirname(__FILE__) . "/element/MethodElement.php";
-	//	require_once dirname(__FILE__) . "/element/AnnotationElement.php";
-
-	//This tells PHP to auto-load classes using Slim's autoloader; this will
-	//only auto-load a class file located in the same directory as Slim.php
-	//whose file name (excluding the final dot and extension) is the same
-	//as its class name (case-sensitive). For example, "View.php" will be
-	//loaded when Slim uses the "View" class for the first time.
+	// register autoloader
 	spl_autoload_register(array('DocBlockParser', 'autoload'));
 
 	/**

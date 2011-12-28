@@ -67,6 +67,21 @@
 		}
 
 		/**
+		 * Returns the first annotation found with a matching name
+		 *
+		 * @param	string	$filter
+		 * @return null|array[AnnotationElement]
+		 */
+		public function getAnnotation($filter)
+		{
+			$annotations = $this->getAnnotations($filter);
+			if(empty($annotations))
+				return null;
+
+			return $annotations[0];
+		}
+
+		/**
 		 * Determines whether this MethodElement instance contains an annotation of a certain type
 		 *
 		 * @param string $filter	An annotation name

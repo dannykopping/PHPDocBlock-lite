@@ -33,7 +33,7 @@
 		/**
 		 * Get an array of all the parsed annotations
 		 *
-		 * @param array	$filter	(optional) Filter by annotation name
+		 * @param array|string	$filter	(optional) Filter by annotation name
 		 * @return array[AnnotationElement]
 		 */
 		public function getAnnotations($filter = null)
@@ -43,6 +43,9 @@
 
 			if (!$filter)
 				return $this->annotations;
+
+			if(is_string($filter))
+				$filter = array($filter);
 
 			$annotations = array();
 			if($filter)
@@ -66,13 +69,34 @@
 		/**
 		 * Determines whether this MethodElement instance contains an annotation of a certain type
 		 *
-		 * @param array $filter	An annotation name
+		 * @param string $filter	An annotation name
 		 * @return bool
 		 */
 		public function hasAnnotation($filter)
 		{
 			$annotations = $this->getAnnotations($filter);
 			return !empty($annotations);
+		}
+
+		/**
+		 * Determines whether this MethodElement instance contains all annotations of certain types
+		 *
+		 * @param array $filters	An array of annotation names
+		 * @return bool
+		 */
+		public function hasAnnotations($filters)
+		{
+			if(empty($filters) || !is_array($filters))
+				return false;
+
+			foreach($filters as $filter)
+			{
+				$annotations = $this->getAnnotations($filter);
+				if(empty($annotations))
+					return false;
+			}
+
+			return true;
 		}
 
 		/**

@@ -18,11 +18,6 @@
 	class DocBlockParser
 	{
 		/**
-		 * @var string	Regular expression to validate PHP DocBlocks
-		 */
-		private $validBlockRegex = "/\/\*{2}(.+)\*\//sm";
-
-		/**
 		 * @var string	Regular expression to isolate all annotations
 		 */
 		private $allDocBlockLinesRegex = "%^(\s+)?\*{1}.+[^/]$%m";
@@ -149,12 +144,11 @@
 
 				foreach ($methods as $method)
 				{
+					$this->currentAnnotation = null;
+
 					$m = new MethodElement($class);
 					$m->name = $method->getName();
 					$m->setReflectionObject($method);
-
-					preg_match_all($this->validBlockRegex, $method->getDocComment(), $matches, PREG_PATTERN_ORDER);
-					array_shift($matches);
 
 					preg_match_all($this->allDocBlockLinesRegex, $method->getDocComment(), $result, PREG_PATTERN_ORDER);
 					for ($i = 0; $i < count($result[0]); $i++)
@@ -210,7 +204,9 @@
 				// it probably relates to an annotation
 
 				if (!$this->currentAnnotation)
+				{
 					$this->currentMethod->description .= $string . "\n";
+				}
 				else
 				{
 					if (!empty($this->currentAnnotation->values))

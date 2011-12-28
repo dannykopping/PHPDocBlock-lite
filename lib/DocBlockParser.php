@@ -61,6 +61,11 @@
 		private $methodFilter;
 
 		/**
+		 * @var	bool	Whether to allow inherited methods to be parsed
+		 */
+		public $allowInherited = true;
+
+		/**
 		 *	Create a new DocBlockParser instance
 		 */
 		public function __construct()
@@ -113,6 +118,16 @@
 		}
 
 		/**
+		 * Whether to allow inherited methods to be parsed
+		 *
+		 * @param bool	$allow
+		 */
+		public function setAllowInherited($allow)
+		{
+			$this->allowInherited = $allow;
+		}
+
+		/**
 		 * Analyzes a class or instance for PHP DocBlock comments
 		 *
 		 * @param array|string|object	$classes	A single string containing the name of the class to reflect, or an object
@@ -149,6 +164,9 @@
 				{
 					$this->currentAnnotation = null;
 
+					if(!$this->allowInherited && $method->class !== $class->name)
+						continue;
+
 					$m = new MethodElement($class);
 					$m->name = $method->getName();
 					$m->setReflectionObject($method);
@@ -177,6 +195,7 @@
 		protected function parse($string)
 		{
 			$an = new AnnotationElement($this->currentMethod);
+			$this->currentMethod->addAnnotation($an);
 
 			// strip first instance of asterisk
 			$string = substr($string, strpos($string, "*") + 1);
@@ -196,7 +215,6 @@
 					}
 				}
 
-				$this->currentMethod->addAnnotation($an);
 				$this->annotations[] = $this->currentAnnotation = $an;
 			}
 			else

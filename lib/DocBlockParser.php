@@ -35,7 +35,7 @@
 		/**
 		 * @var string	Regular expression to split an annotation's values by whitespace
 		 */
-		private $splitByWhitespaceRegex = "/^(@[\w]+)(.+)?$/m";
+		private $splitByWhitespaceRegex = "/((\t|\s{2,})+)/m";
 
 		/**
 		 * @var	MethodElement	A reference to the MethodElement currently being used

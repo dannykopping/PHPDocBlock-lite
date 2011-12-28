@@ -2,7 +2,7 @@
 	/**
 	 *	Defines an annotation defined in a DocBlock
 	 */
-	class AnnotationElement
+	class AnnotationElement extends AbstractElement
 	{
 		/**
 		 * @var	string	The name of the annotation (e.g. @param)
@@ -33,5 +33,26 @@
 		public function getMethod()
 		{
 			return $this->method;
+		}
+
+		/**
+		 * @override
+		 *
+		 * @param Reflector $reflectionObject
+		 * @throws Exception
+		 */
+		public function setReflectionObject(Reflector $reflectionObject)
+		{
+			throw new Exception("Annotations do not have corresponding Reflection objects");
+		}
+
+		/**
+		 * @override
+		 *
+		 * @throws Exception
+		 */
+		public function getReflectionObject()
+		{
+			throw new Exception("Annotations do not have corresponding Reflection objects");
 		}
 	}

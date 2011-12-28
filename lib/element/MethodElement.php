@@ -2,7 +2,7 @@
 	/**
 	 *	Defines a method element relating to a DocBlock
 	 */
-	class MethodElement
+	class MethodElement extends AbstractElement
 	{
 		public $name;
 

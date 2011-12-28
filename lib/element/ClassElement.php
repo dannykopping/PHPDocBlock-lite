@@ -2,7 +2,7 @@
 	/**
 	 *	Defines a class element with several parsed MethodElement instances
 	 */
-	class ClassElement
+	class ClassElement extends AbstractElement
 	{
 		public $name;
 		private $methods;

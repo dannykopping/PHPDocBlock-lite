@@ -139,6 +139,7 @@
 				$reflector = new ReflectionClass($classItem);
 
 				$class = new ClassElement();
+				$class->setReflectionObject($reflector);
 				$class->name = $reflector->getName();
 
 				$this->methods = array();
@@ -150,6 +151,7 @@
 				{
 					$m = new MethodElement($class);
 					$m->name = $method->getName();
+					$m->setReflectionObject($method);
 
 					preg_match_all($this->validBlockRegex, $method->getDocComment(), $matches, PREG_PATTERN_ORDER);
 					array_shift($matches);

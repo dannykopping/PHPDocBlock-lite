@@ -175,17 +175,34 @@
 		 */
 		public function getMethods()
 		{
+			if(!$this->methods || empty($this->methods))
+				return null;
+
 			return $this->methods;
 		}
 
 		/**
 		 * Get an array of all the parsed annotations
 		 *
+		 * @param array	$filter	(optional) Filter by annotation name
 		 * @return array[AnnotationElement]
 		 */
-		public function getAnnotations()
+		public function getAnnotations($filter=null)
 		{
-			return $this->annotations;
+			if(!$this->annotations || empty($this->annotations))
+				return null;
+
+			if(!$this->methods || empty($this->methods))
+				return null;
+
+			$annotations = array();
+			foreach($this->methods as $method)
+			{
+				$methodAnnotations = $method->getAnnotations($filter);
+				array_merge($annotations, $methodAnnotations);
+			}
+
+			return $annotations;
 		}
 
 		/**

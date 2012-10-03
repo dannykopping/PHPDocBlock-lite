@@ -1,0 +1,19 @@
+{
+    "name": "dannykopping/phpdbpl",
+    "type": "library",
+    "description": "A simple library for parsing PHP DocBlock comments",
+    "keywords": ["docblock", "reflection", "parse", "parser"],
+    "homepage": "https://github.com/dannykopping/PHPDocBlock-lite",
+    "license": "",
+    "authors": [
+        {
+            "name": "Danny Kopping",
+            "email": "dannykopping@gmail.com",
+            "homepage": "http://dannykopping.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}

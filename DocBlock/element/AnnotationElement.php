@@ -1,8 +1,12 @@
 <?php
+	namespace DocBlock\Element;
+
+	use DocBlock\Element\Base;
+
     /**
      *    Defines an annotation defined in a DocBlock
      */
-    class AnnotationElement extends AbstractElement
+    class AnnotationElement extends Base
     {
         /**
          * @var    string    The name of the annotation (e.g. @param)

@@ -1,8 +1,12 @@
 <?php
+	namespace DocBlock\Element;
+
+	use DocBlock\Element\Base;
+
     /**
      *    Defines a method element relating to a DocBlock
      */
-    class MethodElement extends AbstractElement
+    class MethodElement extends Base
     {
         public $name;
 

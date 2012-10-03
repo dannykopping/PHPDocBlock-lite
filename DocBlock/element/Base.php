@@ -1,5 +1,7 @@
 <?php
-    abstract class AbstractElement
+	namespace DocBlock\Element;
+
+    abstract class Base
     {
         protected $reflectionObject;
 

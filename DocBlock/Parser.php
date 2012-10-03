@@ -1,14 +1,16 @@
 <?php
+	namespace DocBlock;
 
-    // register autoloader
-    spl_autoload_register(array('DocBlockParser', 'autoload'));
+	use DocBlock\Element\ClassElement;
+
+	use ReflectionClass;
 
     /**
      *    A simple PHP DocBlock parser
      *
      * @author Danny Kopping <dannykopping@gmail.com>
      */
-    class DocBlockParser
+    class Parser
     {
         /**
          * @var string    Regular expression to isolate all annotations
@@ -65,28 +67,6 @@
         {
             // check for the existence of the Reflection API
             $this->checkCompatibility();
-        }
-
-        /**
-         * DocBlockParser autoloader
-         *
-         * Lazy-loads class files when a given class is first referenced.
-         *
-         * @param $class
-         * @return void
-         */
-        public static function autoload($class)
-        {
-            // check same directory
-            $file = realpath(dirname(__FILE__) . "/" . $class . ".php");
-
-            // if none found, check the element directory
-            if (!$file)
-                $file = realpath(dirname(__FILE__) . "/element/" . $class . ".php");
-
-            // if found, require_once the sucker!
-            if ($file)
-                require_once $file;
         }
 
         /**

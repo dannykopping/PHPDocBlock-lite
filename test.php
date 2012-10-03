@@ -1,8 +1,9 @@
 <?php
+	use DocBlock\Parser;
 
-    require_once "DocBlockParser.php";
+	require_once "DocBlock/Parser.php";
 
-    $d = new DocBlockParser();
+    $d = new Parser();
     $d->setAllowInherited(true);
     $d->setMethodFilter(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED);
     $d->analyze(array("TestClass", "DocBlockParser"));
@@ -66,7 +67,7 @@
         /**
          * This is another DocBlock description
          * @param $data  The data to be passed in
-		 * @multiline	Annotation with
+		 * @multiline	AnnotationElement with
 		 * a line break
 		 * or two
          * @author    Danny Kopping

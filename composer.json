@@ -1,5 +1,5 @@
 {
-    "name": "dannykopping/phpdbpl",
+    "name": "dannykopping/docblock",
     "type": "library",
     "description": "A simple library for parsing PHP DocBlock comments",
     "keywords": ["docblock", "reflection", "parse", "parser"],

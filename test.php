@@ -3,10 +3,12 @@
 
 	require_once "DocBlock/Parser.php";
 
+	\DocBlock\Parser::registerAutoloader();
+
     $d = new Parser();
     $d->setAllowInherited(true);
     $d->setMethodFilter(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED);
-    $d->analyze(array("TestClass", "DocBlockParser"));
+    $d->analyze(array("TestClass", "\\DocBlock\\Parser"));
 
     $classes = $d->getClasses();
 

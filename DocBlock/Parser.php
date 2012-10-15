@@ -17,7 +17,7 @@
 		/**
 		 * @var string    Regular expression to isolate all annotations
 		 */
-		private $allDocBlockLinesRegex = "%^(\s+)?\*{1}.+[^/]$%m";
+		private $allDocBlockLinesRegex = "%^(\s+)?\*{1}.+[^/]%m";
 
 		/**
 		 * @var string    Regular expression to isolate an annotation and its related values

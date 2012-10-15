@@ -4,7 +4,7 @@
     "description": "A simple library for parsing PHP DocBlock comments",
     "keywords": ["docblock", "reflection", "parse", "parser"],
     "homepage": "https://github.com/dannykopping/PHPDocBlock-lite",
-    "license": "",
+    "license": "MIT",
     "authors": [
         {
             "name": "Danny Kopping",

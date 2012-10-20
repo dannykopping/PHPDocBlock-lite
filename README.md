@@ -1,5 +1,7 @@
 # PHP DocBlock *Lite*
 
+[![Build Status](https://secure.travis-ci.org/dannykopping/PHPDocBlock-lite.png)](http://travis-ci.org/dannykopping/PHPDocBlock-lite)
+
 ### WTF is a DocBlock?
 
 A DocBlock is a block comment in PHP (with optional annotations):

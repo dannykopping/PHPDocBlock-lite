@@ -3,16 +3,9 @@ use DocBlock\Parser;
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var     Parser
-     */
-    private $parser;
-
     protected function setUp()
     {
         parent::setUp();
-
-        $this->parser = new Parser();
     }
 
     /**
@@ -20,7 +13,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testParserInstanceType()
     {
-        $this->assertInstanceOf("\\DocBlock\\Parser", $this->parser);
+        $parser = new Parser();
+        $this->assertInstanceOf("\\DocBlock\\Parser", $parser);
     }
 
     public function testAllowInheritanceEnabled()
@@ -35,12 +29,14 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testMethodFiltering()
     {
-        $test = $this->createTestClass();
-        $this->parser->setMethodFilter(ReflectionMethod::IS_PRIVATE);
-        $this->parser->analyze($test);
+        $parser = new Parser();
 
-        $classes = $this->parser->getClasses();
-        $class   = $classes[0];
+        $test = $this->createTestClass();
+        $parser->setMethodFilter(ReflectionMethod::IS_PRIVATE);
+        $parser->analyze($test);
+
+        $class = $parser->getClass("TestClass");
+        $this->assertNotNull($class, "Could not find class");
 
         $methods = $class->getMethods();
         foreach ($methods as $method) {
@@ -49,17 +45,103 @@ class ParserTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testAnnotationsExistence()
+    {
+        $method = $this->getMethodFromTestClass();
+
+        $this->assertEquals(true, $method->hasAnnotation("simple"));
+    }
+
+    public function testAnnotationsValueSimple()
+    {
+        $method = $this->getMethodFromTestClass();
+
+        $annotation = $method->getAnnotation("simple");
+        $this->assertNotNull($annotation, "Could not find annotation");
+
+        $value = "annotation";
+        $this->assertEquals($value, implode("", $annotation->values));
+    }
+
+    public function testAnnotationsValueMultiline()
+    {
+        $method = $this->getMethodFromTestClass();
+
+        $annotation = $method->getAnnotation("multiline");
+        $this->assertNotNull($annotation, "Could not find annotation");
+
+        $value = <<<EOD
+multiple
+lines
+of text with        different * spacing
+EOD;
+
+        $this->assertEquals($value, implode("", $annotation->values));
+    }
+
+    public function testAnnotationsValueMultivalue()
+    {
+        $method = $this->getMethodFromTestClass();
+
+        $annotation = $method->getAnnotation("multi-value");
+        $this->assertNotNull($annotation, "Could not find annotation");
+
+        $value = array("value1", "value2");
+
+        $this->assertEquals($value, $annotation->values);
+    }
+
+    public function testAnnotationsValueComplex()
+    {
+        $method = $this->getMethodFromTestClass();
+
+        $annotation = $method->getAnnotation("complex");
+        $this->assertNotNull($annotation, "Could not find annotation");
+
+        $value = array(
+            "value1",
+            <<<EOD
+value2 has multiple
+lines that kinda stray into annotation territory, but it's
+not...
+EOD
+        );
+
+        $this->assertEquals($value, $annotation->values);
+    }
+
+    //
+    //      UTILITY FUNCTIONS
+    //
+
+    private function getMethodFromTestClass()
+    {
+        $parser = new Parser();
+
+        $test = $this->createTestClass();
+        $parser->analyze($test);
+
+        $class = $parser->getClass("TestClass");
+        $this->assertNotNull($class, "Could not find class");
+        $method = $class->getMethod("iAmPrivate");
+        $this->assertNotNull($method, "Could not find method");
+
+        return $method;
+    }
+
     private function allowInheritance($allow = true)
     {
+        $parser = new Parser();
+
         $test = $this->createTestClass(true);
 
-        $this->parser->setAllowInherited($allow);
+        $parser->setAllowInherited($allow);
         // allow all access modifications - public, protected & private
-        $this->parser->setMethodFilter(null);
-        $this->parser->analyze($test);
+        $parser->setMethodFilter(null);
+        $parser->analyze($test);
 
-        $classes = $this->parser->getClasses();
-        $class   = $classes[0];
+        $class = $parser->getClass("DerivedClass");
+        $this->assertNotNull($class, "Could not find class");
         $methods = $class->getMethods();
 
         // if inheritance is not allowed, there should be no methods found
@@ -94,14 +176,21 @@ class ParserTest extends PHPUnit_Framework_TestCase
     }
 }
 
-
 class TestClass
 {
     /**
-     * @some            annotation
-     * @with            multiple
-     *                  lines
-     *                  of text with        different spacing
+     * Some description
+     *
+     * @simple                  annotation
+     * @multiline               multiple
+     *                          lines
+     *                          of text with        different * spacing
+     *
+     * @multi-value             value1      value2
+     *
+     * @complex                 value1  value2 has multiple
+     *                          lines that kinda stray into annotation territory, but it's
+     *                          not...
      */
     private function iAmPrivate()
     {

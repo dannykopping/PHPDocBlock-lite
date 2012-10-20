@@ -32,4 +32,26 @@ class ClassElement extends Base
     {
         return $this->methods;
     }
+
+    /**
+     * Get a specific MethodElement instance by name
+     *
+     * @param $name
+     *
+     * @return MethodElement
+     */
+    public function getMethod($name)
+    {
+        if (count($this->methods) <= 0) {
+            return null;
+        }
+
+        foreach ($this->methods as $method) {
+            if ($method->name == trim($name)) {
+                return $method;
+            }
+        }
+
+        return null;
+    }
 }

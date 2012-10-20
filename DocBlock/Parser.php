@@ -269,6 +269,28 @@ class Parser
     }
 
     /**
+     * Get a single parsed ClassElement instance by name
+     *
+     * @param $name
+     *
+     * @return array[ClassElement]|null
+     */
+    public function getClass($name)
+    {
+        if (!$this->classes || empty($this->classes)) {
+            return null;
+        }
+
+        foreach ($this->classes as $class) {
+            if ($class->name == $name) {
+                return $class;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get an array of all the parsed methods with their related annotations
      *
      * @return array[MethodElement]

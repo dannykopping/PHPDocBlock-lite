@@ -1,31 +1,30 @@
 <?php
-	namespace DocBlock\Element;
+namespace DocBlock\Element;
 
-	use \Reflector;
+use \Reflector;
 
-    abstract class Base
+abstract class Base
+{
+    protected $reflectionObject;
+
+
+    /**
+     * Store a reference to this Element's related Reflection instance
+     *
+     * @param \Reflector $reflectionObject
+     */
+    public function setReflectionObject(Reflector $reflectionObject)
     {
-        protected $reflectionObject;
-
-        /**
-         * Store a reference to this Element's related Reflection instance
-         *
-         * @param ReflectionClass $reflectionObject
-         */
-        public function setReflectionObject(Reflector $reflectionObject)
-        {
-            $this->reflectionObject = $reflectionObject;
-        }
-
-        /**
-         * Get a reference to this Element's related Reflection instance
-         *
-         * @return mixed
-         */
-        public function getReflectionObject()
-        {
-            return $this->reflectionObject;
-        }
+        $this->reflectionObject = $reflectionObject;
     }
 
-?>
+    /**
+     * Get a reference to this Element's related Reflection instance
+     *
+     * @return mixed
+     */
+    public function getReflectionObject()
+    {
+        return $this->reflectionObject;
+    }
+}

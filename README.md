@@ -14,13 +14,13 @@ A DocBlock is a block comment in PHP (with optional annotations):
 ```
 
 ## Installation
-Download or clone the repository and add a `require_once` statement to include the `DocBlockParser` class.
+Download or clone the repository and add a `require_once` statement to include the `Parser` class.
 
 ```php
 
 <?php
 
-	require_once "DocBlockParser.php";
+	require_once "Parser.php";
 
 ?>
 ```
@@ -32,9 +32,9 @@ phpDBL (PHP DocBlock Lite) uses the `Reflection` API (available from PHP 5) to a
 ```php
 
 <?php
-	require_once "DocBlockParser.php";
+	require_once "Parser.php";
 
-	$d = new DocBlockParser();
+	$d = new Parser();
 	$d->analyze("MyClassName");
 
 	$methods = $d->getMethods();
@@ -48,9 +48,9 @@ You can also retrieve a list of given annotations:
 
 <?php
 
-	require_once "DocBlockParser.php";
+	require_once "Parser.php";
 	
-	$d = new DocBlockParser();
+	$d = new Parser();
 	$d->analyze("TestClass");
 	
 	$methods = $d->getMethods();
@@ -98,12 +98,12 @@ Array
 ```php
 <?php
 
-    require_once "DocBlockParser.php";
+    require_once "Parser.php";
 
-    $d = new DocBlockParser();
+    $d = new Parser();
     $d->setAllowInherited(true);
     $d->setMethodFilter(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED);
-    $d->analyze(array("TestClass", "DocBlockParser"));
+    $d->analyze(array("TestClass", "Parser"));
 
     $classes = $d->getClasses();
 

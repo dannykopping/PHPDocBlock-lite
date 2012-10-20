@@ -23,7 +23,7 @@ class Parser
     /**
      * @var string    Regular expression to isolate an annotation and its related values
      */
-    private $annotationRegex = "/^(@[\w]+)(.+)?$/m";
+    private $annotationRegex = "/^(@[\w\-\_]+)(.+)?$/m";
 
     /**
      * @var string    Regular expression to split an annotation's values by whitespace
@@ -217,7 +217,6 @@ class Parser
     protected function parse($string)
     {
         $an = new AnnotationElement($this->currentMethod);
-        $this->currentMethod->addAnnotation($an);
 
         // strip first instance of asterisk
         $string = substr($string, strpos($string, "*") + 1);
@@ -231,6 +230,10 @@ class Parser
                 if (!empty($result[2])) {
                     $an->name   = $result[1][0];
                     $an->values = preg_split($this->splitByWhitespaceRegex, trim($result[2][$i]), null);
+
+                    if (!empty($an->name)) {
+                        $this->currentMethod->addAnnotation($an);
+                    }
                 }
             }
 

@@ -2,6 +2,7 @@
 namespace DocBlock;
 
 use DocBlock\Element\AnnotationElement;
+use DocBlock\Element\Base;
 use Exception;
 use DocBlock\Element\ClassElement;
 use DocBlock\Element\MethodElement;
@@ -31,9 +32,9 @@ class Parser
     private $splitByWhitespaceRegex = "/((\t|\s{2,})+)/m";
 
     /**
-     * @var    MethodElement    A reference to the MethodElement currently being used
+     * @var    Base    A reference to the element currently being used
      */
-    private $currentMethod;
+    private $currentElement;
     /**
      * @var    AnnotationElement    A reference to the AnnotationElement currently being used
      */
@@ -139,7 +140,7 @@ class Parser
     /**
      * Whether to allow inherited methods to be parsed
      *
-     * @param bool    $allow
+     * @param bool $allow
      */
     public function setAllowInherited($allow)
     {
@@ -149,7 +150,7 @@ class Parser
     /**
      * Analyzes a class or instance for PHP DocBlock comments
      *
-     * @param array|string|object    $classes      A single string containing the name of the class to reflect,
+     * @param array|string|object $classes      A single string containing the name of the class to reflect,
      *                                             or an object or an array of these
      *
      * @throws Exception
@@ -173,10 +174,22 @@ class Parser
 
             $class = new ClassElement();
             $class->setReflectionObject($reflector);
-            $class->name = $reflector->getName();
+            $class->setName($reflector->getName());
 
             $this->methods     = array();
             $this->annotations = array();
+
+            preg_match_all(
+                $this->allDocBlockLinesRegex,
+                $class->getReflectionObject()->getDocComment(),
+                $result,
+                PREG_PATTERN_ORDER
+            );
+            
+            for ($i = 0; $i < count($result[0]); $i++) {
+                $this->currentElement =& $class;
+                $this->parse($result[0][$i]);
+            }
 
             // a bug in the ReflectionClass makes getMethods behave unexpectedly when passed a NULL
             $methods = (!$this->methodFilter)
@@ -186,17 +199,17 @@ class Parser
             foreach ($methods as $method) {
                 $this->currentAnnotation = null;
 
-                if (!$this->allowInherited && $method->class !== $class->name) {
+                if (!$this->allowInherited && $method->class !== $class->getName()) {
                     continue;
                 }
 
-                $m       = new MethodElement($class);
-                $m->name = $method->getName();
+                $m = new MethodElement($class);
+                $m->setName($method->getName());
                 $m->setReflectionObject($method);
 
                 preg_match_all($this->allDocBlockLinesRegex, $method->getDocComment(), $result, PREG_PATTERN_ORDER);
                 for ($i = 0; $i < count($result[0]); $i++) {
-                    $this->currentMethod =& $m;
+                    $this->currentElement =& $m;
                     $this->parse($result[0][$i]);
                 }
 
@@ -216,7 +229,7 @@ class Parser
      */
     protected function parse($string)
     {
-        $an = new AnnotationElement($this->currentMethod);
+        $an = new AnnotationElement($this->currentElement);
 
         // strip first instance of asterisk
         $string = substr($string, strpos($string, "*") + 1);
@@ -232,7 +245,7 @@ class Parser
                     $an->values = preg_split($this->splitByWhitespaceRegex, trim($result[2][$i]), null);
 
                     if (!empty($an->name)) {
-                        $this->currentMethod->addAnnotation($an);
+                        $this->currentElement->addAnnotation($an);
                     }
                 }
             }
@@ -245,10 +258,10 @@ class Parser
             // it probably relates to an annotation
 
             if (!$this->currentAnnotation) {
-                $this->currentMethod->description .= $string . "\n";
+                $this->currentElement->setDescription($this->currentElement->getDescription() . PHP_EOL);
             } else {
                 if (!empty($this->currentAnnotation->values)) {
-                    $this->currentAnnotation->values[count($this->currentAnnotation->values) - 1] .= "\n" . $string;
+                    $this->currentAnnotation->values[count($this->currentAnnotation->values) - 1] .= PHP_EOL . $string;
                 }
             }
         }
@@ -282,7 +295,7 @@ class Parser
         }
 
         foreach ($this->classes as $class) {
-            if ($class->name == $name) {
+            if ($class->getName() == $name) {
                 return $class;
             }
         }
@@ -307,7 +320,7 @@ class Parser
     /**
      * Get an array of all the parsed annotations
      *
-     * @param array    $filter    (optional) Filter by annotation name
+     * @param array $filter    (optional) Filter by annotation name
      *
      * @return array[AnnotationElement]
      */

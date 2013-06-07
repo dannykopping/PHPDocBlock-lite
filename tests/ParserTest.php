@@ -176,6 +176,9 @@ EOD
     }
 }
 
+/**
+ * @classAnnotation             Some value
+ */
 class TestClass
 {
     /**

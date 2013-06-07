@@ -23,22 +23,22 @@ class AnnotationElement extends Base
     /**
      * @var    MethodElement    The associated MethodElement instance to which this annotation belongs
      */
-    private $method;
+    private $element;
 
     /**
-     * @param $method    MethodElement    The associated MethodElement instance to which this annotation belongs
+     * @param $base    Base    The associated element instance to which this annotation belongs
      */
-    public function __construct($method)
+    public function __construct($base)
     {
-        $this->method = $method;
+        $this->element = $base;
     }
 
     /**
      * @return MethodElement    The associated MethodElement instance to which this annotation belongs
      */
-    public function getMethod()
+    public function getElement()
     {
-        return $this->method;
+        return $this->element;
     }
 
     /**

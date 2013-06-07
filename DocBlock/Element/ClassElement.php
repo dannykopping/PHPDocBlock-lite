@@ -8,7 +8,6 @@ use DocBlock\Element\Base;
  */
 class ClassElement extends Base
 {
-    public $name;
     private $methods;
 
     /**

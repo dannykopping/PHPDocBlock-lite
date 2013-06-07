@@ -176,6 +176,10 @@ class Parser
             $class->setReflectionObject($reflector);
             $class->setName($reflector->getName());
 
+            if (is_object($classItem)) {
+                $class->setInstance($classItem);
+            }
+
             $this->methods     = array();
             $this->annotations = array();
 

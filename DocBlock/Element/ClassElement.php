@@ -11,6 +11,12 @@ class ClassElement extends Base
     private $methods;
 
     /**
+     * A reference to the instance that was used to derive this ClassElement
+     * @var
+     */
+    private $instance;
+
+    /**
      * @param MethodElement $method        Add a parsed method to this class
      */
     public function addMethod(MethodElement $method)
@@ -52,5 +58,21 @@ class ClassElement extends Base
         }
 
         return null;
+    }
+
+    /**
+     * @param mixed $instance
+     */
+    public function setInstance($instance)
+    {
+        $this->instance = $instance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstance()
+    {
+        return $this->instance;
     }
 }

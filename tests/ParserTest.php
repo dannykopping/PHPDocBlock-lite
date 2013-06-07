@@ -122,6 +122,29 @@ EOD
         }
     }
 
+    public function testClassInstanceRetention()
+    {
+        $parser = new Parser();
+
+        // test instance
+        $test = $this->createTestClass();
+        $parser->analyze($test);
+
+        $class = $parser->getClass("TestClass");
+        $this->assertEquals($test, $class->getInstance());
+    }
+
+    public function testClassNameNonRetention()
+    {
+        $parser = new Parser();
+
+        // test classname string
+        $parser->analyze('\\TestClass');
+
+        $class = $parser->getClass("TestClass");
+        $this->assertNull($class->getInstance());
+    }
+
     //
     //      UTILITY FUNCTIONS
     //

@@ -47,74 +47,86 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testAnnotationsExistence()
     {
-        $method = $this->getMethodFromTestClass();
+        $elements = array($this->getTestClass(), $this->getMethodFromTestClass());
 
-        $this->assertEquals(true, $method->hasAnnotation("simple"));
+        foreach ($elements as $element) {
+            $this->assertEquals(true, $element->hasAnnotation("simple"));
+        }
     }
 
     public function testAnnotationsValueSimple()
     {
-        $method = $this->getMethodFromTestClass();
+        $elements = array($this->getTestClass(), $this->getMethodFromTestClass());
 
-        $annotation = $method->getAnnotation("simple");
-        $this->assertNotNull($annotation, "Could not find annotation");
+        foreach ($elements as $element) {
+            $annotation = $element->getAnnotation("simple");
+            $this->assertNotNull($annotation, "Could not find annotation");
 
-        $value = "annotation";
-        $this->assertEquals($value, implode("", $annotation->values));
+            $value = "annotation";
+            $this->assertEquals($value, implode("", $annotation->values));
+        }
     }
 
     public function testAnnotationsValueMultiline()
     {
-        $method = $this->getMethodFromTestClass();
+        $elements = array($this->getTestClass(), $this->getMethodFromTestClass());
 
-        $annotation = $method->getAnnotation("multiline");
-        $this->assertNotNull($annotation, "Could not find annotation");
+        foreach ($elements as $element) {
 
-        $value = <<<EOD
+            $annotation = $element->getAnnotation("multiline");
+            $this->assertNotNull($annotation, "Could not find annotation");
+
+            $value = <<<EOD
 multiple
 lines
 of text with        different * spacing
 EOD;
 
-        $this->assertEquals($value, implode("", $annotation->values));
+            $this->assertEquals($value, implode("", $annotation->values));
+        }
     }
 
     public function testAnnotationsValueMultivalue()
     {
-        $method = $this->getMethodFromTestClass();
+        $elements = array($this->getTestClass(), $this->getMethodFromTestClass());
 
-        $annotation = $method->getAnnotation("multi-value");
-        $this->assertNotNull($annotation, "Could not find annotation");
+        foreach ($elements as $element) {
 
-        $value = array("value1", "value2");
+            $annotation = $element->getAnnotation("multi-value");
+            $this->assertNotNull($annotation, "Could not find annotation");
 
-        $this->assertEquals($value, $annotation->values);
+            $value = array("value1", "value2");
+
+            $this->assertEquals($value, $annotation->values);
+        }
     }
 
     public function testAnnotationsValueComplex()
     {
-        $method = $this->getMethodFromTestClass();
+        $elements = array($this->getTestClass(), $this->getMethodFromTestClass());
 
-        $annotation = $method->getAnnotation("complex");
-        $this->assertNotNull($annotation, "Could not find annotation");
+        foreach ($elements as $element) {
+            $annotation = $element->getAnnotation("complex");
+            $this->assertNotNull($annotation, "Could not find annotation");
 
-        $value = array(
-            "value1",
-            <<<EOD
+            $value = array(
+                "value1",
+                <<<EOD
 value2 has multiple
 lines that kinda stray into annotation territory, but it's
 not...
 EOD
-        );
+            );
 
-        $this->assertEquals($value, $annotation->values);
+            $this->assertEquals($value, $annotation->values);
+        }
     }
 
     //
     //      UTILITY FUNCTIONS
     //
 
-    private function getMethodFromTestClass()
+    private function getTestClass()
     {
         $parser = new Parser();
 
@@ -123,6 +135,12 @@ EOD
 
         $class = $parser->getClass("TestClass");
         $this->assertNotNull($class, "Could not find class");
+        return $class;
+    }
+
+    private function getMethodFromTestClass()
+    {
+        $class  = $this->getTestClass();
         $method = $class->getMethod("iAmPrivate");
         $this->assertNotNull($method, "Could not find method");
 
@@ -177,7 +195,18 @@ EOD
 }
 
 /**
- * @classAnnotation             Some value
+ * Some description
+ *
+ * @simple                  annotation
+ * @multiline               multiple
+ *                          lines
+ *                          of text with        different * spacing
+ *
+ * @multi-value             value1      value2
+ *
+ * @complex                 value1  value2 has multiple
+ *                          lines that kinda stray into annotation territory, but it's
+ *                          not...
  */
 class TestClass
 {

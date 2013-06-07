@@ -185,7 +185,7 @@ class Parser
                 $result,
                 PREG_PATTERN_ORDER
             );
-            
+
             for ($i = 0; $i < count($result[0]); $i++) {
                 $this->currentElement =& $class;
                 $this->parse($result[0][$i]);
@@ -241,10 +241,11 @@ class Parser
         if (!empty($result[1])) {
             for ($i = 0; $i < count($result[2]); $i++) {
                 if (!empty($result[2])) {
-                    $an->name   = $result[1][0];
-                    $an->values = preg_split($this->splitByWhitespaceRegex, trim($result[2][$i]), null);
+                    $an->setName($result[1][0]);
+                    $an->setValues(preg_split($this->splitByWhitespaceRegex, trim($result[2][$i]), null));
 
-                    if (!empty($an->name)) {
+                    $name = $an->getName();
+                    if (!empty($name)) {
                         $this->currentElement->addAnnotation($an);
                     }
                 }
@@ -260,9 +261,12 @@ class Parser
             if (!$this->currentAnnotation) {
                 $this->currentElement->setDescription($this->currentElement->getDescription() . PHP_EOL);
             } else {
-                if (!empty($this->currentAnnotation->values)) {
-                    $this->currentAnnotation->values[count($this->currentAnnotation->values) - 1] .= PHP_EOL . $string;
+                $values = $this->currentAnnotation->getValues();
+                if (!empty($values)) {
+                    $values[count($values) - 1] .= PHP_EOL . $string;
                 }
+
+                $this->currentAnnotation->setValues($values);
             }
         }
     }

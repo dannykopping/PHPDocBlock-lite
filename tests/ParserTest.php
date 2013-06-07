@@ -63,7 +63,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
             $this->assertNotNull($annotation, "Could not find annotation");
 
             $value = "annotation";
-            $this->assertEquals($value, implode("", $annotation->values));
+            $this->assertEquals($value, implode("", $annotation->getValues()));
         }
     }
 
@@ -82,7 +82,7 @@ lines
 of text with        different * spacing
 EOD;
 
-            $this->assertEquals($value, implode("", $annotation->values));
+            $this->assertEquals($value, implode("", $annotation->getValues()));
         }
     }
 
@@ -97,7 +97,7 @@ EOD;
 
             $value = array("value1", "value2");
 
-            $this->assertEquals($value, $annotation->values);
+            $this->assertEquals($value, $annotation->getValues());
         }
     }
 
@@ -118,7 +118,7 @@ not...
 EOD
             );
 
-            $this->assertEquals($value, $annotation->values);
+            $this->assertEquals($value, $annotation->getValues());
         }
     }
 

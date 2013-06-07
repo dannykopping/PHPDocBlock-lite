@@ -11,11 +11,6 @@ use Exception;
 class AnnotationElement extends Base
 {
     /**
-     * @var    string    The name of the annotation (e.g. @param)
-     */
-    public $name;
-
-    /**
      * @var array    The values associated with this annotation
      */
     public $values = array();
@@ -31,6 +26,22 @@ class AnnotationElement extends Base
     public function __construct($base)
     {
         $this->element = $base;
+    }
+
+    /**
+     * @param array $values
+     */
+    public function setValues($values)
+    {
+        $this->values = $values;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->values;
     }
 
     /**

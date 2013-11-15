@@ -1,6 +1,7 @@
 # PHP DocBlock *Lite*
 
 [![Build Status](https://secure.travis-ci.org/dannykopping/PHPDocBlock-lite.png)](http://travis-ci.org/dannykopping/PHPDocBlock-lite)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/dannykopping/PHPDocBlock-lite/badges/quality-score.png?s=74f0712e06c487f3bc06c4add08dede08cd810f1)](https://scrutinizer-ci.com/g/dannykopping/PHPDocBlock-lite/)
 
 ### WTF is a DocBlock?
 

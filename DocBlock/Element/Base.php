@@ -5,16 +5,28 @@ use \Reflector;
 
 abstract class Base
 {
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var string
+     */
     protected $description;
 
+    /**
+     * @var \Reflector
+     */
     protected $reflectionObject;
 
+    /**
+     * @var AnnotationElement[]
+     */
     protected $annotations = array();
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -22,7 +34,7 @@ abstract class Base
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -30,7 +42,7 @@ abstract class Base
     }
 
     /**
-     * @param mixed $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -38,7 +50,7 @@ abstract class Base
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -58,7 +70,7 @@ abstract class Base
     /**
      * Get a reference to this Element's related Reflection instance
      *
-     * @return mixed
+     * @return \Reflector
      */
     public function getReflectionObject()
     {

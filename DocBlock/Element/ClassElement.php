@@ -1,8 +1,6 @@
 <?php
 namespace DocBlock\Element;
 
-use DocBlock\Element\Base;
-
 /**
  *    Defines a class element with several parsed MethodElement instances
  */
@@ -31,7 +29,7 @@ class ClassElement extends Base
     /**
      * Get an array of MethodElement instances
      *
-     * @return array[MethodElement]
+     * @return MethodElement[]
      */
     public function getMethods()
     {

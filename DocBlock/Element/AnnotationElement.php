@@ -1,9 +1,8 @@
 <?php
 namespace DocBlock\Element;
 
-use DocBlock\Element\Base;
-use Reflector;
 use Exception;
+use Reflector;
 
 /**
  *    Defines an annotation defined in a DocBlock

@@ -84,7 +84,7 @@ abstract class Base
      *
      * @param array|string    $filter    (optional) Filter by annotation name
      *
-     * @return array[AnnotationElement]
+     * @return AnnotationElement[]
      */
     public function getAnnotations($filter = null)
     {
@@ -121,7 +121,7 @@ abstract class Base
      *
      * @param    string    $filter
      *
-     * @return null|array[AnnotationElement]
+     * @return null|AnnotationElement[]
      */
     public function getAnnotation($filter)
     {

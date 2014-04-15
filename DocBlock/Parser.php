@@ -41,16 +41,16 @@ class Parser
     private $currentAnnotation;
 
     /**
-     * @var    array    An array of parsed ClassElement instances
+     * @var    ClassElement[]    An array of parsed ClassElement instances
      */
     private $classes;
 
     /**
-     * @var    array    An array of parsed MethodElement instances
+     * @var    MethodElement[]    An array of parsed MethodElement instances
      */
     private $methods;
     /**
-     * @var    array    An array of parsed AnnotationElement instances
+     * @var    AnnotationElement[]    An array of parsed AnnotationElement instances
      */
     private $annotations;
 
@@ -71,49 +71,6 @@ class Parser
     {
         // check for the existence of the Reflection API
         $this->checkCompatibility();
-    }
-
-    /********************************************************************************
-     * PSR-0 Autoloader
-     *
-     * Do not use if you are using Composer to autoload dependencies.
-     *******************************************************************************/
-
-    /**
-     * Slim PSR-0 autoloader from Slim Framework
-     */
-    public static function autoload($className)
-    {
-        $thisClass = str_replace(__NAMESPACE__ . '\\', '', __CLASS__);
-
-        $baseDir = __DIR__;
-
-        if (substr($baseDir, -strlen($thisClass)) === $thisClass) {
-            $baseDir = substr($baseDir, 0, -strlen($thisClass));
-        }
-
-        $className = ltrim($className, '\\');
-        $fileName  = $baseDir;
-        $namespace = '';
-        if ($lastNsPos = strripos($className, '\\')) {
-            $namespace = substr($className, 0, $lastNsPos);
-            $namespace = substr($namespace, (strpos($namespace, __NAMESPACE__) + strlen(__NAMESPACE__)));
-            $className = substr($className, $lastNsPos + 1);
-            $fileName .= str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-        }
-        $fileName .= DIRECTORY_SEPARATOR . $className . '.php';
-
-        if (file_exists($fileName)) {
-            require_once $fileName;
-        }
-    }
-
-    /**
-     * Register the PSR-0 autoloader
-     */
-    public static function registerAutoloader()
-    {
-        spl_autoload_register(__NAMESPACE__ . "\\Parser::autoload");
     }
 
     /**
@@ -150,7 +107,7 @@ class Parser
     /**
      * Analyzes a class or instance for PHP DocBlock comments
      *
-     * @param array|string|object $classes      A single string containing the name of the class to reflect,
+     * @param array|string|object $classes         A single string containing the name of the class to reflect,
      *                                             or an object or an array of these
      *
      * @throws Exception
@@ -229,7 +186,7 @@ class Parser
      * Parses a PHP DocBlock to construct MethodElement and AnnotationElement instances
      * based on the contents
      *
-     * @param $string    The PHP DocBlock string
+     * @param $string string    The PHP DocBlock string
      */
     protected function parse($string)
     {
@@ -278,7 +235,7 @@ class Parser
     /**
      * Get an array of parsed ClassElement instances
      *
-     * @return array[ClassElement]|null
+     * @return ClassElement[]|null
      */
     public function getClasses()
     {
@@ -294,7 +251,7 @@ class Parser
      *
      * @param $name
      *
-     * @return array[ClassElement]|null
+     * @return ClassElement[]|null
      */
     public function getClass($name)
     {
@@ -314,7 +271,7 @@ class Parser
     /**
      * Get an array of all the parsed methods with their related annotations
      *
-     * @return array[MethodElement]
+     * @return MethodElement[]
      */
     public function getMethods()
     {
@@ -328,9 +285,9 @@ class Parser
     /**
      * Get an array of all the parsed annotations
      *
-     * @param array $filter    (optional) Filter by annotation name
+     * @param array $filter (optional) Filter by annotation name
      *
-     * @return array[AnnotationElement]
+     * @return AnnotationElement[]
      */
     public function getAnnotations($filter = null)
     {

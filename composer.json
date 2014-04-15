@@ -9,7 +9,7 @@
         {
             "name": "Danny Kopping",
             "email": "dannykopping@gmail.com",
-            "homepage": "http://dannykopping.com",
+            "homepage": "http://infomaniac.co.za",
             "role": "Developer"
         }
     ],
@@ -17,9 +17,9 @@
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "~3.7"
     },
     "autoload": {
-        "psr-0": { "DocBlock": "." }
+        "psr-4": { "DocBlock\\": "DocBlock" }
     }
 }

@@ -38,11 +38,11 @@ class AnnotationElement extends Base
     /**
      * Return first element
      *
-     * @return array
+     * @return string
      */
     public function getValue()
     {
-        return count($this->values) >= 1 ? $this->values[0] : $this->values;
+        return current($this->getValues());
     }
 
     /**

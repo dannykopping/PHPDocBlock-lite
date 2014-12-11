@@ -5,18 +5,11 @@
 
 ### WTF is a DocBlock?
 
-A DocBlock is a block comment in PHP (with optional annotations):
+Addition
 
-```php
+## Modification
 
-/**
-* Optional DocBlock comment
-*
-* @annotation	I'm an annotation!
-*/
-```
 
-## Installation
 Download or clone the repository and add a `require_once` statement to include the `Parser` class.
 
 ```php
